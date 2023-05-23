@@ -2,9 +2,10 @@
   "name": "todo-list",
   "version": "1.0.0",
   "description": "> Set up the project, the goal here is to master all of the tools and best practices about Linter and Gitflow.",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
     "prepare": "husky install"
   },
   "keywords": [],
@@ -20,12 +21,22 @@
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^21.0.0",
     "stylelint-csstree-validator": "^1.9.0",
-    "stylelint-scss": "^3.21.0"
+    "stylelint-scss": "^3.21.0",
+    "webpack": "^5.83.1",
+    "webpack-cli": "^5.1.1"
   },
-  "lint-staged":{
-    "*.(js)": ["eslint --fix"],
-    "*.(css|scss)": ["stylelint --fix"],
-    "*.(html)": ["hint"]
+  "lint-staged": {
+    "*.(js)": [
+      "eslint --fix"
+    ],
+    "*.(css|scss)": [
+      "stylelint --fix"
+    ],
+    "*.(html)": [
+      "hint"
+    ]
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
   }
-
 }
