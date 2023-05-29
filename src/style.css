@@ -5,6 +5,14 @@ body {
   font-family: 'Roboto', sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  color: #333;
-  background-color: #bbb;
+  color: #000;
+}
+
+.container {
+  max-width: 300px;
+  width: 50%;
+  margin: 0 auto;
+  padding: 0 15px;
+  border: 2px solid #ddd;
+  box-shadow: 3px 5px 3px rgba(15, 14, 14, 0.3);
 }
