@@ -4,19 +4,62 @@ import Icon from './asset/menu.png';
 const myIcon = document.createElement('img');
 myIcon.src = Icon;
 
-const todos = [];
+let todos = [];
+
+const updateLocalStorage = () => {
+  localStorage.setItem('todos', JSON.stringify(todos));
+};
 
 window.onload = () => {
   const form = document.getElementById('todo-form');
+  const todoList = document.getElementById('todo-list');
 
   function renderTodoItem(item) {
-    const html = `
-      <li>
-        <input type="checkbox" />
-        <p>${item.todo}</p>
-        <img src="${item.icon}" alt="Icono de tarea" />
-      </li>`;
-    return html;
+    const todoItem = document.createElement('li');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+
+    const todoText = document.createElement('p');
+    todoText.textContent = item.todo;
+
+    checkbox.addEventListener('change', () => {
+      item.done = checkbox.checked;
+      if (checkbox.checked) {
+        todoText.classList.add('done');
+      } else {
+        todoText.classList.remove('done');
+      }
+      updateLocalStorage();
+    });
+
+    if (item.done) {
+      checkbox.checked = true;
+      todoText.classList.add('done');
+    }
+
+    const icon = document.createElement('img');
+    icon.src = myIcon.src;
+    icon.alt = 'Icono de tarea';
+
+    todoItem.appendChild(checkbox);
+    todoItem.appendChild(todoText);
+    todoItem.appendChild(icon);
+
+    return todoItem;
+  }
+
+  function renderTodoList() {
+    todoList.innerHTML = '';
+    todos.forEach((item) => {
+      const todoItem = renderTodoItem(item);
+      todoList.appendChild(todoItem);
+    });
+  }
+
+  function clearList() {
+    todos = [];
+    updateLocalStorage();
+    renderTodoList();
   }
 
   form.addEventListener('keydown', (e) => {
@@ -25,32 +68,22 @@ window.onload = () => {
       const todo = document.getElementById('todo');
       const todoText = todo.value;
       todo.value = '';
-      todos.push(todoText);
-      const todoList = document.getElementById('todo-list');
-      todoList.innerHTML = '';
-      for (let i = 0; i < todos.length; i += 1) {
-        todoList.innerHTML += renderTodoItem({ todo: todos[i], icon: myIcon.src });
-      }
+      todos.push({ todo: todoText, done: false });
+      updateLocalStorage();
+      renderTodoList();
     }
   });
 
-  const todoList = document.getElementById('todo-list');
   const clear = document.getElementById('clear');
-
-  function renderTodoList() {
-    todoList.innerHTML = '';
-    for (let i = 0; i < todos.length; i += 1) {
-      todoList.innerHTML += renderTodoItem({ todo: todos[i], icon: myIcon.src });
-    }
-  }
-
-  function clearList() {
-    todos.length = 0;
-    renderTodoList();
-  }
 
   clear.addEventListener('click', clearList);
 
-  todoList.innerHTML = ''; // Limpiar la lista inicialmente
-  renderTodoList();
+  todoList.innerHTML = ''; // Clear initial list
+
+  // Retrieve data from localStorage on page load
+  const storedTodos = localStorage.getItem('todos');
+  if (storedTodos) {
+    todos = JSON.parse(storedTodos);
+    renderTodoList();
+  }
 };

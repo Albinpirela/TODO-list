@@ -77,10 +77,16 @@ img {
   width: 90%;
   margin: 0;
   padding: 0;
+  color: #757575;
 }
 
 #clear {
   color: #757575;
   font-size: 1rem;
   font-weight: lighter;
+}
+
+.done {
+  text-decoration: line-through;
+  color: #757575;
 }
