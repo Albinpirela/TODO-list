@@ -2,17 +2,85 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: serif, 'Roboto', sans-serif;
   font-size: 16px;
   line-height: 1.5;
   color: #000;
 }
 
+input {
+  outline: none;
+  border: none;
+  width: 98%;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #000;
+}
+
+input::placeholder {
+  color: #a5a1a1;
+  font-size: 1.5rem;
+}
+
 .container {
-  max-width: 300px;
+  max-width: 500px;
   width: 50%;
-  margin: 0 auto;
-  padding: 0 15px;
-  border: 2px solid #ddd;
-  box-shadow: 3px 5px 3px rgba(15, 14, 14, 0.3);
+  margin: 250px auto;
+  padding: 15px 10px;
+  border: 2px solid #a5a1a1;
+  box-shadow: 10px 5px 10px 5px rgba(15, 14, 14, 0.3);
+}
+
+.heading {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.heading h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+img {
+  width: 30px;
+  height: 30px;
+  margin: 0;
+}
+
+#todo-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#todo-list li {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+#todo-list li > input {
+  width: 5%;
+}
+
+#todo-list li > p {
+  width: 90%;
+  margin: 0;
+  padding: 0;
+}
+
+#clear {
+  color: #757575;
+  font-size: 1rem;
+  font-weight: lighter;
 }
