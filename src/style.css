@@ -19,7 +19,7 @@ input {
 
 input::placeholder {
   color: #a5a1a1;
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 
 .container {
@@ -39,6 +39,7 @@ input::placeholder {
 }
 
 .heading h1 {
+  color: #a5a1a1;
   font-size: 2rem;
   font-weight: 700;
   margin: 0;
@@ -78,6 +79,7 @@ img {
   margin: 0;
   padding: 0;
   color: #757575;
+  font-size: 1.5rem;
 }
 
 #clear {

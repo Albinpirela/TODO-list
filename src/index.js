@@ -85,5 +85,14 @@ window.onload = () => {
   if (storedTodos) {
     todos = JSON.parse(storedTodos);
     renderTodoList();
+  } else {
+    // Load predefined tasks if no tasks are stored
+    todos = [
+      { todo: 'Wash the dogs', done: false },
+      { todo: 'Complete To Do list project', done: false },
+      { todo: 'Fix car', done: false },
+    ];
+    updateLocalStorage();
+    renderTodoList();
   }
 };
