@@ -10,9 +10,9 @@ body {
 
 :root {
   --color-line: #a5a1a1;
+  --white: #fff;
   --color-font: #242423;
   --color-check: #cccccb;
-  --color-clear: #393938;
 }
 
 input {
@@ -20,15 +20,17 @@ input {
   border: none;
   width: 100%;
   font-size: 1.1rem;
-  line-height: 2.5;
+  line-height: 2;
   box-sizing: border-box;
   color: var(--color-font);
   border-bottom: 2px solid var(--color-line);
+  padding: 0 0 0 0.8em;
 }
 
 input::placeholder {
-  color: var(--color-font);
+  color: var(--color-line);
   font-size: 1rem;
+  font-style: italic;
 }
 
 .container {
@@ -52,19 +54,26 @@ input::placeholder {
   justify-content: space-between;
   align-items: center;
   border-bottom: 2px solid var(--color-line);
+  line-height: 2;
 }
 
 .heading h1 {
   color: var(--color-font);
-  font-size: 2rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  margin: 0;
+  margin: 0 0 0 0.8em;
 }
 
 img {
-  width: 30px;
-  height: 30px;
-  margin: 0;
+  width: 20px;
+  height: 20px;
+  margin: 0 0.8em 0 0;
+}
+
+.heading > img {
+  width: 15px;
+  height: 15px;
+  margin: 0 0.9em 0 0;
 }
 
 #todo-list {
@@ -83,9 +92,10 @@ img {
   justify-content: space-between;
   align-items: center;
   margin: 0;
-  padding: 0;
+  box-sizing: border-box;
   border-bottom: 2px solid var(--color-line);
   line-height: 2;
+  padding: 0 0 0 0.8em;
 }
 
 #todo-list li > input {
@@ -98,13 +108,13 @@ img {
   margin: 0;
   padding: 0;
   color: var(--color-font);
-  font-size: 1.5rem;
+  font-size: 1.1rem;
 }
 
 #clear {
-  color: var(--color-clear);
+  background-color: var(--white);
+  color: var(--color-line);
   font-size: 1.1rem;
-  font-weight: lighter;
 }
 
 .done {
