@@ -41,6 +41,29 @@ window.onload = () => {
     icon.src = myIcon.src;
     icon.alt = 'Icono de tarea';
 
+    // Agregar evento de clic para habilitar la edición
+    todoText.addEventListener('click', () => {
+      todoText.contentEditable = true;
+      todoText.focus();
+      todoText.classList.add('editing');
+    });
+
+    // Agregar evento de tecla para guardar la edición
+    todoText.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        todoText.contentEditable = false;
+        todoText.classList.remove('editing');
+        const newText = todoText.textContent.trim();
+        if (newText !== '') {
+          item.todo = newText;
+          updateLocalStorage();
+        } else {
+          todoText.textContent = item.todo;
+        }
+      }
+    });
+
     todoItem.appendChild(checkbox);
     todoItem.appendChild(todoText);
     todoItem.appendChild(icon);
