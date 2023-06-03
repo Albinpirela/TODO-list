@@ -63,7 +63,7 @@ window.onload = () => {
   }
 
   form.addEventListener('keydown', (e) => {
-    if (e.keyCode === 13) {
+    if (e.key === 'Enter') {
       e.preventDefault();
       const todo = document.getElementById('todo');
       const todoText = todo.value;
