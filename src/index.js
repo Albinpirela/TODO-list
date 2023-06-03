@@ -1,8 +1,12 @@
 import './style.css';
 import Icon from './asset/menu.png';
+import iconClear from './asset/clearicon.png';
 
 const myIcon = document.createElement('img');
 myIcon.src = Icon;
+
+const clearIcon = document.createElement('img');
+clearIcon.src = iconClear;
 
 let todos = [];
 
@@ -10,74 +14,100 @@ const updateLocalStorage = () => {
   localStorage.setItem('todos', JSON.stringify(todos));
 };
 
-window.onload = () => {
-  const form = document.getElementById('todo-form');
-  const todoList = document.getElementById('todo-list');
+function renderTodoItem(item) {
+  const todoItem = document.createElement('li');
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
 
-  function renderTodoItem(item) {
-    const todoItem = document.createElement('li');
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
+  const todoText = document.createElement('p');
+  todoText.textContent = item.todo;
 
-    const todoText = document.createElement('p');
-    todoText.textContent = item.todo;
-
-    checkbox.addEventListener('change', () => {
-      item.done = checkbox.checked;
-      if (checkbox.checked) {
-        todoText.classList.add('done');
-      } else {
-        todoText.classList.remove('done');
-      }
-      updateLocalStorage();
-    });
-
-    if (item.done) {
-      checkbox.checked = true;
+  checkbox.addEventListener('change', () => {
+    item.done = checkbox.checked;
+    if (checkbox.checked) {
       todoText.classList.add('done');
+    } else {
+      todoText.classList.remove('done');
     }
+    updateLocalStorage();
+  });
 
-    const icon = document.createElement('img');
-    icon.src = myIcon.src;
-    icon.alt = 'Icono de tarea';
+  if (item.done) {
+    checkbox.checked = true;
+    todoText.classList.add('done');
+  }
 
-    // Agregar evento de clic para habilitar la edición
-    todoText.addEventListener('click', () => {
+  const icon = document.createElement('img');
+  icon.src = myIcon.src;
+  icon.alt = 'Icono de tarea';
+
+  // Agregar evento de clic para habilitar la edición
+  let isSelected = false; // Variable para almacenar el estado de selección
+  const originalIconSrc = icon.src; // Almacenar la fuente de origen del icono original
+  todoText.addEventListener('click', () => {
+    if (!isSelected) {
+      // Si el elemento no está seleccionado, se activa el modo de edición
       todoText.contentEditable = true;
       todoText.focus();
       todoText.classList.add('editing');
-    });
+      icon.src = iconClear.src; // Cambiar el icono a iconClear
+      isSelected = true; // Establecer el estado de selección a true
+    }
+  });
 
-    // Agregar evento de tecla para guardar la edición
-    todoText.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        todoText.contentEditable = false;
-        todoText.classList.remove('editing');
-        const newText = todoText.textContent.trim();
-        if (newText !== '') {
-          item.todo = newText;
-          updateLocalStorage();
-        } else {
-          todoText.textContent = item.todo;
-        }
+  todoText.addEventListener('blur', () => {
+    // Cuando el elemento pierde el foco
+    if (isSelected) {
+      // Si el elemento estaba selec
+      todoText.contentEditable = false;
+      todoText.classList.remove('editing');
+      icon.src = originalIconSrc; // Restaurar el icono original
+      isSelected = false; // Establecer el estado de selección a false
+    }
+  });
+
+  todoText.addEventListener('click', () => {
+    todoText.contentEditable = true;
+    todoText.focus();
+    todoText.classList.add('editing');
+    icon.src = iconClear.src; // Cambiar el icono a iconClear
+  });
+
+  // Agregar evento de tecla para guardar la edición
+  todoText.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      todoText.contentEditable = false;
+      todoText.classList.remove('editing');
+      const newText = todoText.textContent.trim();
+      if (newText !== '') {
+        item.todo = newText;
+        updateLocalStorage();
+      } else {
+        todoText.textContent = item.todo;
       }
-    });
+      icon.src = myIcon.src; // Cambiar el icono de vuelta a myIcon
+    }
+  });
 
-    todoItem.appendChild(checkbox);
-    todoItem.appendChild(todoText);
-    todoItem.appendChild(icon);
+  todoItem.appendChild(checkbox);
+  todoItem.appendChild(todoText);
+  todoItem.appendChild(icon);
 
-    return todoItem;
-  }
+  return todoItem;
+}
 
-  function renderTodoList() {
-    todoList.innerHTML = '';
-    todos.forEach((item) => {
-      const todoItem = renderTodoItem(item);
-      todoList.appendChild(todoItem);
-    });
-  }
+function renderTodoList() {
+  const todoList = document.getElementById('todo-list');
+  todoList.innerHTML = '';
+  todos.forEach((item) => {
+    const todoItem = renderTodoItem(item);
+    todoList.appendChild(todoItem);
+  });
+}
+
+window.onload = () => {
+  const form = document.getElementById('todo-form');
 
   function clearList() {
     todos = [];
@@ -101,6 +131,7 @@ window.onload = () => {
 
   clear.addEventListener('click', clearList);
 
+  const todoList = document.getElementById('todo-list');
   todoList.innerHTML = ''; // Clear initial list
 
   // Retrieve data from localStorage on page load
