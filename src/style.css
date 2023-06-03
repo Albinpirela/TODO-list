@@ -111,6 +111,12 @@ img {
   font-size: 1.1rem;
 }
 
+#todo-list li > p:focus {
+  border: none;
+  outline: none;
+  background-color: lightyellow;
+}
+
 #clear {
   background-color: var(--white);
   color: var(--color-line);
