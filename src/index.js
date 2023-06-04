@@ -43,34 +43,16 @@ function renderTodoItem(item) {
 
   // Agregar evento de clic para habilitar la edición
   let isSelected = false; // Variable para almacenar el estado de selección
-  const originalIconSrc = icon.src; // Almacenar la fuente de origen del icono original
+
   todoText.addEventListener('click', () => {
     if (!isSelected) {
       // Si el elemento no está seleccionado, se activa el modo de edición
       todoText.contentEditable = true;
       todoText.focus();
       todoText.classList.add('editing');
-      icon.src = iconClear.src; // Cambiar el icono a iconClear
+      icon.src = clearIcon.src; // Cambiar el icono a iconClear
       isSelected = true; // Establecer el estado de selección a true
     }
-  });
-
-  todoText.addEventListener('blur', () => {
-    // Cuando el elemento pierde el foco
-    if (isSelected) {
-      // Si el elemento estaba selec
-      todoText.contentEditable = false;
-      todoText.classList.remove('editing');
-      icon.src = originalIconSrc; // Restaurar el icono original
-      isSelected = false; // Establecer el estado de selección a false
-    }
-  });
-
-  todoText.addEventListener('click', () => {
-    todoText.contentEditable = true;
-    todoText.focus();
-    todoText.classList.add('editing');
-    icon.src = iconClear.src; // Cambiar el icono a iconClear
   });
 
   // Agregar evento de tecla para guardar la edición
@@ -87,6 +69,26 @@ function renderTodoItem(item) {
         todoText.textContent = item.todo;
       }
       icon.src = myIcon.src; // Cambiar el icono de vuelta a myIcon
+    }
+  });
+
+  todoText.addEventListener('blur', () => {
+    icon.src = myIcon.src; // Cambiar el icono a myIcon
+  });
+
+  icon.addEventListener('click', () => {
+    if (isSelected) {
+      const index = todos.indexOf(item);
+      if (index > -1) {
+        todos.splice(index, 1);
+        updateLocalStorage();
+      }
+    } else {
+      todoText.contentEditable = true;
+      todoText.focus();
+      todoText.classList.add('editing');
+      icon.src = clearIcon.src; // Cambiar el icono a iconClear
+      isSelected = true; // Establecer el estado de selección a true
     }
   });
 
