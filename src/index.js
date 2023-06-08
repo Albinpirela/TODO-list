@@ -26,12 +26,15 @@ function ready(elemento) {
       tarea.style.textDecoration = 'none'; // Quitar el tachado de la tarea cuando el checkbox no esté marcado
     }
   });
+
   tarea.addEventListener('click', () => {
     tarea.contentEditable = true; // Habilitar la edición de la tarea
     tarea.focus(); // Dar foco al elemento para la edición
+    elemento.style.backgroundColor = 'lightyellow'; // Agregar color de fondo amarillo claro al elemento
 
     tarea.addEventListener('blur', () => {
       tarea.contentEditable = false; // Deshabilitar la edición de la tarea
+      elemento.style.backgroundColor = ''; // Restaurar el color de fondo original del elemento
     });
 
     tarea.addEventListener('keydown', (event) => {
@@ -39,8 +42,10 @@ function ready(elemento) {
         event.preventDefault(); // Evitar el comportamiento predeterminado al presionar Enter
 
         tarea.contentEditable = false; // Deshabilitar la edición de la tarea
+        elemento.style.backgroundColor = ''; // Restaurar el color de fondo original del elemento
       }
     });
+
     const clearButton = elemento.querySelector(`img[src="${clearIcon.src}"]`);
 
     clearButton.addEventListener('click', () => {
@@ -56,11 +61,13 @@ function ready(elemento) {
   });
 
   tarea.addEventListener('focus', () => {
-    icono.src = clearIcon.src; // Cambiar el icono a clearIcon cuando el
-    // campo de texto tenga el foco
+    icono.src = clearIcon.src; // Cambia el icono a clearIcon cuando tenga el foco
+    elemento.style.backgroundColor = 'lightyellow'; // Agregar color de fondo amarillo claro al elemento
   });
+
   tarea.addEventListener('blur', () => {
     icono.src = myIcon.src; // Restaurar el icono original cuando el campo de texto pierda el foco
+    elemento.style.backgroundColor = ''; // Restaurar el color de fondo original del elemento
   });
 }
 
