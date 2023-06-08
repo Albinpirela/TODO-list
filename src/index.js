@@ -1,98 +1,153 @@
 import './style.css';
 import Icon from './asset/menu.png';
+import iconClear from './asset/clearicon.png';
 
 const myIcon = document.createElement('img');
 myIcon.src = Icon;
 
-let todos = [];
+const clearIcon = document.createElement('img');
+clearIcon.src = iconClear;
 
-const updateLocalStorage = () => {
-  localStorage.setItem('todos', JSON.stringify(todos));
-};
+const todo = document.getElementById('todo');
+const todos = document.getElementById('todo-list');
+let toDoList = [];
 
-window.onload = () => {
-  const form = document.getElementById('todo-form');
-  const todoList = document.getElementById('todo-list');
+function ready(elemento) {
+  const checkbox = elemento.querySelector('input[type="checkbox"]');
+  const icono = elemento.querySelector('img');
+  const tarea = elemento.querySelector('p');
 
-  function renderTodoItem(item) {
-    const todoItem = document.createElement('li');
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-
-    const todoText = document.createElement('p');
-    todoText.textContent = item.todo;
-
-    checkbox.addEventListener('change', () => {
-      item.done = checkbox.checked;
-      if (checkbox.checked) {
-        todoText.classList.add('done');
-      } else {
-        todoText.classList.remove('done');
-      }
-      updateLocalStorage();
-    });
-
-    if (item.done) {
-      checkbox.checked = true;
-      todoText.classList.add('done');
-    }
-
-    const icon = document.createElement('img');
-    icon.src = myIcon.src;
-    icon.alt = 'Icono de tarea';
-
-    todoItem.appendChild(checkbox);
-    todoItem.appendChild(todoText);
-    todoItem.appendChild(icon);
-
-    return todoItem;
-  }
-
-  function renderTodoList() {
-    todoList.innerHTML = '';
-    todos.forEach((item) => {
-      const todoItem = renderTodoItem(item);
-      todoList.appendChild(todoItem);
-    });
-  }
-
-  function clearList() {
-    todos = [];
-    updateLocalStorage();
-    renderTodoList();
-  }
-
-  form.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const todo = document.getElementById('todo');
-      const todoText = todo.value;
-      todo.value = '';
-      todos.push({ todo: todoText, done: false });
-      updateLocalStorage();
-      renderTodoList();
+  checkbox.addEventListener('change', () => {
+    if (checkbox.checked) {
+      icono.src = clearIcon.src; // Cambiar el icono a iconClear
+      tarea.style.textDecoration = 'line-through'; // Tachar la tarea cuando el checkbox esté marcado
+    } else {
+      icono.src = myIcon.src; // Cambiar el icono a Icon
+      tarea.style.textDecoration = 'none'; // Quitar el tachado de la tarea cuando el checkbox no esté marcado
     }
   });
 
-  const clear = document.getElementById('clear');
+  tarea.addEventListener('click', () => {
+    tarea.contentEditable = true; // Habilitar la edición de la tarea
+    tarea.focus(); // Dar foco al elemento para la edición
+    elemento.style.backgroundColor = 'lightyellow'; // Agregar color de fondo amarillo claro al elemento
 
-  clear.addEventListener('click', clearList);
+    tarea.addEventListener('blur', () => {
+      tarea.contentEditable = false; // Deshabilitar la edición de la tarea
+      elemento.style.backgroundColor = ''; // Restaurar el color de fondo original del elemento
+    });
 
-  todoList.innerHTML = ''; // Clear initial list
+    tarea.addEventListener('keydown', (event) => {
+      if (event.keyCode === 13) {
+        event.preventDefault(); // Evitar el comportamiento predeterminado al presionar Enter
 
-  // Retrieve data from localStorage on page load
+        tarea.contentEditable = false; // Deshabilitar la edición de la tarea
+        elemento.style.backgroundColor = ''; // Restaurar el color de fondo original del elemento
+      }
+    });
+
+    const clearButton = elemento.querySelector(`img[src="${clearIcon.src}"]`);
+
+    clearButton.addEventListener('click', () => {
+      const listItem = clearButton.closest('li');
+      listItem.remove();
+
+      // Actualizar el array toDoList con los elementos actualizados en el DOM
+      toDoList = Array.from(todos.children);
+
+      // Guardar los elementos en el almacenamiento local
+      localStorage.setItem('todos', JSON.stringify(toDoList));
+    });
+  });
+
+  tarea.addEventListener('focus', () => {
+    icono.src = clearIcon.src; // Cambia el icono a clearIcon cuando tenga el foco
+    elemento.style.backgroundColor = 'lightyellow'; // Agregar color de fondo amarillo claro al elemento
+  });
+
+  tarea.addEventListener('blur', () => {
+    icono.src = myIcon.src; // Restaurar el icono original cuando el campo de texto pierda el foco
+    elemento.style.backgroundColor = ''; // Restaurar el color de fondo original del elemento
+  });
+}
+
+function borrarElementoTachado() {
+  const clearButton = document.getElementById('clear');
+  clearButton.addEventListener('click', () => {
+    const elementos = document.querySelectorAll('#todo-list li');
+
+    elementos.forEach((elemento) => {
+      const checkbox = elemento.querySelector('input[type="checkbox"]');
+      const tarea = elemento.querySelector('p');
+
+      if (checkbox.checked || tarea.style.textDecoration === 'line-through') {
+        elemento.remove();
+      }
+    });
+
+    // Actualizar el array toDoList con los elementos actualizados en el DOM
+    toDoList = Array.from(todos.children);
+
+    // Guardar los elementos en el almacenamiento local
+    localStorage.setItem('todos', JSON.stringify(toDoList));
+  });
+}
+
+// Función para agregar una tarea a la lista
+function agregarTarea(todoText) {
+  const element = document.createElement('li');
+  const taskId = `task-${Date.now()}`; // Generar un identificador único
+  element.setAttribute('id', taskId);
+  element.innerHTML = `
+    <input type="checkbox">
+    <p>${todoText}</p>
+    <img src="${myIcon.src}">
+  `;
+
+  // Actualizar el array toDoList con los elementos actualizados en el DOM
+  toDoList = Array.from(todos.children);
+
+  // Guardar los elementos en el almacenamiento local
+  localStorage.setItem('todos', JSON.stringify(toDoList));
+
+  ready(element);
+  todos.appendChild(element); // Agregar el elemento al DOM
+}
+
+function actualizarTodos(event) {
+  if (event.keyCode === 13) {
+    const todoTarea = todo.value;
+    agregarTarea(todoTarea); // Utilizar la función agregarTarea para agregar la nueva tarea
+    todo.value = ''; // Limpiar el campo de texto
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  borrarElementoTachado();
+
+  // Cargar los elementos almacenados en el almacenamiento local
   const storedTodos = localStorage.getItem('todos');
   if (storedTodos) {
-    todos = JSON.parse(storedTodos);
-    renderTodoList();
+    toDoList = JSON.parse(storedTodos);
+    toDoList.forEach((element) => {
+      ready(element);
+      todos.appendChild(element);
+    });
   } else {
-    // Load predefined tasks if no tasks are stored
-    todos = [
-      { todo: 'Wash the dogs', done: false },
-      { todo: 'Complete To Do list project', done: false },
-      { todo: 'Fix car', done: false },
+    // Agregar las tareas predefinidas a la lista
+    const predefinedTodos = [
+      'Wash the dogs',
+      'Complete To Do list project',
+      'Fix car',
     ];
-    updateLocalStorage();
-    renderTodoList();
+
+    predefinedTodos.forEach((todoText) => {
+      agregarTarea(todoText);
+    });
   }
-};
+
+  // Almacenar los elementos en el inspector de elementos
+  localStorage.setItem('todos', JSON.stringify(toDoList));
+});
+
+todo.addEventListener('keydown', actualizarTodos);
