@@ -84,6 +84,12 @@ function borrarElementoTachado() {
         elemento.remove();
       }
     });
+
+    // Actualizar el array toDoList con los elementos actualizados en el DOM
+    toDoList = Array.from(todos.children);
+
+    // Guardar los elementos en el almacenamiento local
+    localStorage.setItem('todos', JSON.stringify(toDoList));
   });
 }
 
@@ -98,6 +104,12 @@ function agregarTarea(todoText) {
     <img src="${myIcon.src}">
   `;
 
+  // Actualizar el array toDoList con los elementos actualizados en el DOM
+  toDoList = Array.from(todos.children);
+
+  // Guardar los elementos en el almacenamiento local
+  localStorage.setItem('todos', JSON.stringify(toDoList));
+
   ready(element);
   todos.appendChild(element); // Agregar el elemento al DOM
 }
@@ -107,12 +119,6 @@ function actualizarTodos(event) {
     const todoTarea = todo.value;
     agregarTarea(todoTarea); // Utilizar la función agregarTarea para agregar la nueva tarea
     todo.value = ''; // Limpiar el campo de texto
-
-    // Actualizar el array toDoList con los elementos actualizados en el DOM
-    toDoList = Array.from(todos.children);
-
-    // Guardar los elementos en el almacenamiento local
-    localStorage.setItem('todos', JSON.stringify(toDoList));
   }
 }
 
@@ -138,13 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
     predefinedTodos.forEach((todoText) => {
       agregarTarea(todoText);
     });
-
-    // Actualizar el array toDoList con los elementos actualizados en el DOM
-    toDoList = Array.from(todos.children);
-
-    // Guardar los elementos predefinidos en el almacenamiento local
-    localStorage.setItem('todos', JSON.stringify(toDoList));
   }
+
+  // Almacenar los elementos en el inspector de elementos
+  localStorage.setItem('todos', JSON.stringify(toDoList));
 });
 
 todo.addEventListener('keydown', actualizarTodos);
